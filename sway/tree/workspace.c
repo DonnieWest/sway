@@ -314,7 +314,8 @@ static struct sway_container *workspace_output_prev_next_impl(
 static struct sway_container *workspace_prev_next_impl(
 		struct sway_container *workspace, int dir) {
 	if (!workspace) {
-		return NULL;
+		return prev_workspace_name ? container_find(&root_container,
+				_workspace_by_name, (void *)prev_workspace_name) : NULL;
 	}
 	if (!sway_assert(workspace->type == C_WORKSPACE,
 				"Argument must be a workspace, is %d", workspace->type)) {
@@ -326,7 +327,7 @@ static struct sway_container *workspace_prev_next_impl(
 	int new_index = index + dir;
 
 	if (new_index >= 0 && new_index < output->children->length) {
-		return output->children->items[index + dir];
+		return output->children->items[new_index];
 	}
 
 	// Look on a different output
